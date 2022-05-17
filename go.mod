@@ -1,5 +1,6 @@
 module github.com/Samarth2898/golangjwt
 
+
 go 1.17
 
 require (
