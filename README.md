@@ -1,2 +1,2 @@
 # golangjwt
-An experiment to understand Golang JWT
+An experiment to understand Golang JWT.
