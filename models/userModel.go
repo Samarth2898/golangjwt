@@ -18,5 +18,5 @@ type User struct{
 	Refresh_token		*string				`json:"refresh_token" validate:"required, min=2, max=100"`
 	Created_at			time.Time			`json:"created_at"`
 	Updated_at			time.Time			`json:"updated_at"`
-	User_id				*string				`json:"user_id"`
+	User_id				string				`json:"user_id"`
 }
