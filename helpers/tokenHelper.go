@@ -2,6 +2,7 @@ package helpers
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"os"
 	"time"
@@ -27,8 +28,8 @@ var userCollection *mongo.Collection = database.OpenCollection(database.Client,"
 
 var SECRET_KEY = os.Getenv("SECRET_KEY")
 
-
 func GenerateAllTokens(email string, firstName string, lastName string, userType string, uid string) (signedToken string, signedRefreshToken string, err error){
+	fmt.Println(SECRET_KEY)
 	claims := &SignedDetails{
 		Email: email,
 		First_name: firstName,
@@ -46,18 +47,49 @@ func GenerateAllTokens(email string, firstName string, lastName string, userType
 		},
 	}
 
-	signedToken, err = jwt.NewWithClaims(jwt.SigningMethodES256, claims).SignedString([]byte(SECRET_KEY))
+	signedToken, err = jwt.NewWithClaims(jwt.SigningMethodRS256, claims).SignedString([]byte(SECRET_KEY))
 	if err!=nil{
 		log.Panic(err.Error())
 		return
 	}
-	signedRefreshToken, err = jwt.NewWithClaims(jwt.SigningMethodES256, refreshClaims).SignedString([]byte(SECRET_KEY))
+	signedRefreshToken, err = jwt.NewWithClaims(jwt.SigningMethodRS256, refreshClaims).SignedString([]byte(SECRET_KEY))
 	if err!=nil{
 		log.Panic(err.Error())
 		return
 	}
 	return
 }	
+
+
+func ValidateToken(signedToken string) (claims *SignedDetails, msg string){
+	token, err := jwt.ParseWithClaims(
+		signedToken,
+		&SignedDetails{},
+		func(token *jwt.Token) (interface{}, error) {
+			return []byte(SECRET_KEY), nil
+		},
+	)
+
+	if err!=nil{
+		msg = err.Error()
+		return
+	}
+
+	claims, ok := token.Claims.(*SignedDetails)
+	if !ok{
+		msg = "the token is invalid"
+		msg = err.Error()
+		return
+	}
+
+	if claims.ExpiresAt < int64(time.Now().Local().Unix()){
+		msg = "token has expired"
+		msg = err.Error()	
+	}
+	return claims,msg
+}
+
+
 
 func UpdateAllTokens(signedToken string, signedRefreshToken string, userID string){
 	ctx, cancel := context.WithTimeout(context.Background(),100*time.Second)
