@@ -2,7 +2,6 @@ package helpers
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"os"
 	"time"
@@ -29,7 +28,7 @@ var userCollection *mongo.Collection = database.OpenCollection(database.Client,"
 var SECRET_KEY = os.Getenv("SECRET_KEY")
 
 func GenerateAllTokens(email string, firstName string, lastName string, userType string, uid string) (signedToken string, signedRefreshToken string, err error){
-	fmt.Println(SECRET_KEY)
+	
 	claims := &SignedDetails{
 		Email: email,
 		First_name: firstName,
@@ -46,13 +45,14 @@ func GenerateAllTokens(email string, firstName string, lastName string, userType
 			ExpiresAt: time.Now().Local().Add(time.Hour * time.Duration(186)).Unix(),
 		},
 	}
-
-	signedToken, err = jwt.NewWithClaims(jwt.SigningMethodRS256, claims).SignedString([]byte(SECRET_KEY))
+	
+	signedToken, err = jwt.NewWithClaims(jwt.SigningMethodHS256, claims).SignedString([]byte(SECRET_KEY))
 	if err!=nil{
 		log.Panic(err.Error())
 		return
 	}
-	signedRefreshToken, err = jwt.NewWithClaims(jwt.SigningMethodRS256, refreshClaims).SignedString([]byte(SECRET_KEY))
+	
+	signedRefreshToken, err = jwt.NewWithClaims(jwt.SigningMethodHS256, refreshClaims).SignedString([]byte(SECRET_KEY))
 	if err!=nil{
 		log.Panic(err.Error())
 		return
