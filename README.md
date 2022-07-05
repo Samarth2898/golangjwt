@@ -9,7 +9,7 @@ go run main.go
 ```
 
 ## Endpoints available
-The server runs on port 8080 and can be accessed with the following end-points-
+The server runs on port 9000 and can be accessed with the following end-points-
 - user signup
 ```
 http://localhost:9000/users/signup
