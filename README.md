@@ -1,5 +1,5 @@
 # Golangjwt
-An experiment to understand Golang JWT.
+An experiment to understand the implementation of JWT in Golang.
 
 # How to run the project locally
 - clone the repo
