@@ -33,11 +33,21 @@ http://localhost:9000/users/signup
 ```
 http://localhost:9000/users/login
 ```
+- it is POST request which takes the following as the payload.
+```json
+{
+    "password":"abc123%",
+    "email":"abc@def.com"
+}
+```
 ### get all users
 ```
 http://localhost:9000/users
 ```
+- it is GET request with a header "token" containing the access_token.
 ### get individual user
 ```
 localhost:9000/users/:id
 ```
+- it is GET request with a header "token" containing the access_token. 
+- user_id is passed as a path parameter.
